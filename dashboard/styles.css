@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root { font-family: Inter, system-ui, sans-serif; }
+.block-container { max-width: 1180px; padding: 32px 32px 18px; }
+[data-testid="stAppViewContainer"] { background: #FAFAFA; }
+[data-testid="stHeader"] { background: #FAFAFA; }
+[data-testid="stSidebar"] { background: #FFFFFF; border-right: 1px solid #E2E8F0; }
+[data-testid="stSidebarContent"] { padding-top: 1.5rem; }
+.dashboard-topbar { height: 4px; background: #1A365D; margin: -32px -32px 28px; }
+.header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.header-title { color: #1A365D; font-size: 20px; font-weight: 600; line-height: 1.25; margin: 0; }
+.header-subtitle { color: #64748B; font-size: 13px; margin-top: 7px; }
+.pill-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.status-pill { border: 1px solid #E2E8F0; border-radius: 999px; color: #64748B; background: #FFFFFF; font-size: 11px; padding: 7px 10px; white-space: nowrap; }
+.status-pill.synthetic { color: #B45309; border-color: #B45309; }
+.status-pill.golden { color: #0F766E; border-color: #0F766E; }
+.section-label { color: #64748B; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin: 22px 0 8px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.kpi-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 1px 3px rgba(15,23,42,.06); padding: 18px 20px; min-height: 118px; }
+.kpi-card.hero { border-top: 3px solid #1A365D; }
+.kpi-label { color: #64748B; font-size: 11px; font-weight: 600; letter-spacing: .08em; }
+.kpi-value { color: #1A365D; font-size: 31px; font-weight: 600; line-height: 1.15; margin-top: 12px; }
+.kpi-value.legacy { color: #6B7280; }
+.kpi-note { color: #64748B; font-size: 12px; line-height: 1.35; margin-top: 7px; }
+.section-title { color: #1A365D; font-size: 16px; font-weight: 600; margin: 0 0 10px; }
+.insight-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 1px 3px rgba(15,23,42,.06); padding: 20px; }
+.callout { background: #F8FAFC; border-left: 4px solid #1A365D; border-radius: 0 8px 8px 0; color: #1F2937; font-size: 14px; padding: 14px 16px; }
+.investment-name { color: #1A365D; font-size: 24px; font-weight: 600; margin-bottom: 5px; }
+.investment-rationale { color: #64748B; font-size: 13px; margin-bottom: 16px; }
+.mini-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.mini-label { color: #64748B; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+.mini-value { color: #1F2937; font-size: 16px; font-weight: 600; margin-top: 4px; }
+.assumption { color: #64748B; font-size: 12px; margin-top: 16px; }
+.truth-table { border: 1px solid #E2E8F0; border-radius: 8px; overflow: hidden; width: 100%; }
+.truth-row { display: grid; grid-template-columns: 1.55fr .65fr .65fr .95fr; align-items: center; border-bottom: 1px solid #E2E8F0; color: #1F2937; font-size: 12px; min-height: 34px; padding: 0 10px; }
+.truth-row:last-child { border-bottom: 0; }
+.truth-row.header { background: #F8FAFC; color: #64748B; font-size: 10px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+.truth-row.misleading { background: rgba(185,28,28,.05); }
+.truth-row.genuine { background: rgba(15,118,110,.05); }
+.verdict { align-items: center; display: inline-flex; gap: 5px; font-weight: 600; }
+.dot { border-radius: 50%; display: inline-block; height: 7px; width: 7px; }
+.dot.genuine { background: #0F766E; }
+.dot.misleading { background: #B91C1C; }
+.dot.inconclusive { background: #B45309; }
+.footer { border-top: 1px solid #E2E8F0; color: #64748B; font-size: 11px; line-height: 1.5; margin-top: 24px; padding-top: 14px; }
+@media (max-width: 800px) { .header-row { display: block; } .pill-row { justify-content: flex-start; margin-top: 14px; } .kpi-grid { grid-template-columns: repeat(2, 1fr); } .mini-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .block-container { padding: 20px 16px 14px; } .dashboard-topbar { margin: -20px -16px 20px; } .kpi-grid { grid-template-columns: 1fr; } }

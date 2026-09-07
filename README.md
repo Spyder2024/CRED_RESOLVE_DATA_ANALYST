@@ -10,10 +10,12 @@ python -m venv .venv
 python -m pip install -r requirements.txt
 python scripts\generate_demo_data.py
 python -m src.pipeline
-streamlit run app.py
+streamlit run dashboard\app.py
 ```
 
 The demo data is deliberately small and synthetic. It exercises duplicate payments, multiple agent identifiers, late events, timezone normalization, and a mid-year targeting change. Replace files under `data/raw/` with the supplied extracts and rerun the pipeline.
+
+The executive dashboard is powered exclusively by `data/golden.duckdb`. On a fresh clone, `dashboard/app.py` generates the contract-identical synthetic database automatically. When a real `data/golden.duckdb` is placed there, the dashboard detects it as `GOLDEN` without code changes.
 
 ## Repository map
 

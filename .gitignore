@@ -7,3 +7,7 @@ data/raw/*.csv
 data/staging/*.parquet
 data/golden/*.parquet
 data/golden/*.csv
+data/golden/*.duckdb
+data/golden/*.synthetic
+data/golden.duckdb
+data/golden.synthetic
