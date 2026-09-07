@@ -1,0 +1,6 @@
+duckdb>=1.1
+pandas>=2.2
+numpy>=2.0
+streamlit>=1.57
+plotly>=5.24
+jupyter>=1.0
