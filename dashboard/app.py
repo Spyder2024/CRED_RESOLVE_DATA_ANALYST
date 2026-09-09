@@ -1,14 +1,17 @@
 """Orchestrate the one-screen CEO dashboard from the golden DuckDB contract."""
 
-from pathlib import Path
+import sys
 from datetime import datetime
+from pathlib import Path
+
+ROOT = Path(__file__).parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 import streamlit as st
 
 from dashboard.components import counterfactual, header, investment, kpi_strip, trend, truth_table, waterfall
 from dashboard.data import load_dashboard_data
-
-ROOT = Path(__file__).parents[1]
 
 st.set_page_config(page_title="Recovery Fact Check", page_icon=":material/search:", layout="wide")
 
