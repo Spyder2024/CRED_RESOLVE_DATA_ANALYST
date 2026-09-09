@@ -1,1 +1,1 @@
-"""Reusable dashboard rendering components."""
+"""Reusable dashboard presentation components."""

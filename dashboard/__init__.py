@@ -1,1 +1,1 @@
-"""Executive recovery fact-check dashboard package."""
+"""Collections recovery fact-check dashboard."""

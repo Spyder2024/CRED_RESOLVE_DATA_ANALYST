@@ -1,66 +1,75 @@
-"""Orchestrate the one-screen CEO dashboard from the golden DuckDB contract."""
-
-import sys
-from datetime import datetime
 from pathlib import Path
-
-ROOT = Path(__file__).parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+import sys
 
 import streamlit as st
 
-from dashboard.components import counterfactual, header, investment, kpi_strip, trend, truth_table, waterfall
-from dashboard.data import load_dashboard_data
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-st.set_page_config(page_title="Recovery Fact Check", page_icon=":material/search:", layout="wide")
+from dashboard.data import load_data
+from dashboard.state import get_theme
+from dashboard.views import data_quality, decision, methodology, metrics, recovery, verdict
 
-with open(ROOT / "dashboard" / "styles.css", encoding="utf-8") as stylesheet:
-    st.html(f"<style>{stylesheet.read()}</style>")
 
-frames, source = load_dashboard_data()
-summary = frames["mart_kpi_summary"].iloc[0]
-monthly = frames["mart_monthly_trend"].sort_values("month").copy()
+st.set_page_config(
+    page_title="CRED RESOLVE · Forensics Platform",
+    page_icon="⚡",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
-with st.sidebar:
-    st.markdown("**Source status**")
-    source_class = source.lower()
-    st.markdown(f'<div class="status-pill {source_class}">{source}</div>', unsafe_allow_html=True)
-    st.caption("All displayed values come from the DuckDB mart contract.")
-    start_date = monthly["month"].min().date()
-    end_date = monthly["month"].max().date()
-    date_selection = st.date_input("Date range", value=(start_date, end_date), min_value=start_date, max_value=end_date)
-    st.selectbox("Segment", ["All"], index=0, help="The current mart contract is an executive aggregate without a segment dimension.")
 
-if isinstance(date_selection, tuple) and len(date_selection) == 2:
-    selected_start, selected_end = date_selection
-    monthly = monthly.loc[monthly["month"].dt.date.between(selected_start, selected_end)].copy()
+def page(view, section_name: str, page_title: str):
+    def render_page():
+        theme = get_theme()
+        data = load_data(theme, str(st.session_state.get("complete_only", True)))
+        view.render(data)
+    return render_page
 
-as_of = summary["data_asof_date"].date()
-header.render(as_of, source)
-st.markdown('<div class="section-label">Verdict</div>', unsafe_allow_html=True)
-kpi_strip.render(summary)
 
-st.markdown('<div class="section-label">Proof</div>', unsafe_allow_html=True)
-with st.container(border=True):
-    waterfall.render(frames["mart_waterfall"].sort_values("component_order"), float(summary["reported_change_pct"]), float(summary["verified_change_pct"]))
+pages = {
+    "Overview": [
+        st.Page(
+            page(verdict, "Overview", "Executive Overview"),
+            title="Executive Overview",
+            url_path="overview",
+            icon=":material/dashboard:",
+            default=True,
+        ),
+        st.Page(
+            page(recovery, "Overview", "Recovery Analytics"),
+            title="Recovery Analytics",
+            url_path="recovery",
+            icon=":material/trending_up:",
+        ),
+        st.Page(
+            page(data_quality, "Overview", "Data Quality & Lineage"),
+            title="Data Quality & Lineage",
+            url_path="data-quality",
+            icon=":material/verified_user:",
+        ),
+    ],
+    "Verdict": [
+        st.Page(
+            page(decision, "Verdict", "₹10 Cr Capital Allocation"),
+            title="₹10 Cr Decision",
+            url_path="decision",
+            icon=":material/account_balance:",
+        ),
+        st.Page(
+            page(metrics, "Verdict", "Metrics Truth Table"),
+            title="Metrics & Confidence",
+            url_path="metrics",
+            icon=":material/fact_check:",
+        ),
+        st.Page(
+            page(methodology, "Verdict", "Methodology & Reproduction"),
+            title="Methodology & Lineage",
+            url_path="methodology",
+            icon=":material/account_tree:",
+        ),
+    ],
+}
 
-trend_column, truth_column = st.columns([1.38, 1], gap="large")
-with trend_column:
-    latest_gap = float(summary["verified_change_pct"] - summary["reported_change_pct"])
-    st.markdown(f'<div class="section-title">Audited recovery is {latest_gap:.1f} pts above the legacy view</div>', unsafe_allow_html=True)
-    trend.render(monthly, float(summary["reported_change_pct"]), float(summary["verified_change_pct"]))
-with truth_column:
-    misleading = int((frames["mart_metric_truth"]["verdict"] == "MISLEADING").sum())
-    inconclusive = int((frames["mart_metric_truth"]["verdict"] == "INCONCLUSIVE").sum())
-    st.markdown(f'<div class="section-title">{misleading} metric needs correction; {inconclusive} remain inconclusive</div>', unsafe_allow_html=True)
-    truth_table.render(frames["mart_metric_truth"])
-
-st.markdown('<div class="section-label">Cause</div>', unsafe_allow_html=True)
-counterfactual.render(frames["mart_counterfactual"].iloc[0])
-
-st.markdown('<div class="section-label">Action</div>', unsafe_allow_html=True)
-investment.render(frames["mart_investment"])
-
-generated_at = datetime.now().strftime("%Y-%m-%d %H:%M")
-st.markdown(f'<div class="footer">Caveats: trailing 45 days provisional (late-arriving payments restated) · channel results under 3 attribution schemes in memo · every number traces to a query in sql/metrics.sql · Generated {generated_at}.</div>', unsafe_allow_html=True)
+st.navigation(pages).run()
