@@ -2,6 +2,8 @@
 
 This document details the end-to-end technical specification for operating the CRED RESOLVE Forensics Platform in daily production.
 
+![Enterprise Data Analytics Platform Architecture](architecture_diagram.png)
+
 ---
 
 ## 1. End-to-End Data Pipeline Flow
