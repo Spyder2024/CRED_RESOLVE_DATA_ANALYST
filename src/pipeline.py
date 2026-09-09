@@ -169,7 +169,10 @@ def build_golden() -> Path:
     try:
         for name, frame in {**metrics, "quality_summary": pd.DataFrame([quality_summary]), "account_month": clean["daily_targeting"], "payments_deduped": clean["payments"], "quality_checks": quality_checks}.items():
             connection.register(f"frame_{name}", frame)
-            connection.execute(f"CREATE TABLE {name} AS SELECT * FROM frame_{name}")
+            storage_name = f"_{name}_data" if name.startswith("mart_") else name
+            connection.execute(f"CREATE TABLE {storage_name} AS SELECT * FROM frame_{name}")
+            if name.startswith("mart_"):
+                connection.execute(f"CREATE VIEW {name} AS SELECT * FROM {storage_name}")
     finally:
         connection.close()
     (ROOT / "data" / "real_run_quality.json").write_text(json.dumps(quality_summary, indent=2, default=str), encoding="utf-8")

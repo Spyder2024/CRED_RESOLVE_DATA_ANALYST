@@ -8,7 +8,6 @@ import duckdb
 import pandas as pd
 import streamlit as st
 
-from src.pipeline import SOURCE, build_golden
 from src.synth.generate_dashboard_data import DEFAULT_DATABASE, generate_database
 
 REQUIRED_COLUMNS = {
@@ -42,11 +41,8 @@ def load_golden(database_path: str = str(DEFAULT_DATABASE), database_mtime: floa
     path = Path(database_path)
     source = "GOLDEN"
     if not path.exists():
-        if SOURCE.exists():
-            build_golden()
-        else:
-            generate_database(path, seed=42)
-            source = "SYNTHETIC"
+        generate_database(path, seed=42)
+        source = "SYNTHETIC"
     elif path.with_suffix(".synthetic").exists() and path.with_suffix(".synthetic").stat().st_mtime >= path.stat().st_mtime:
         source = "SYNTHETIC"
     frames = _query_contract(path)

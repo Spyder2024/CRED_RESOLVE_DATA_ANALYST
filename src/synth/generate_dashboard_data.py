@@ -88,9 +88,10 @@ def generate_database(path: str | Path = DEFAULT_DATABASE, seed: int = 42) -> Pa
     counterfactual = pd.DataFrame([{"estimate_pts": -2.1, "ci_low": -3.0, "ci_high": -1.2, "method": "DiD + PSM, triangulated"}])
     tables = {"mart_kpi_summary": summary, "mart_waterfall": _waterfall(), "mart_monthly_trend": _trend(), "mart_metric_truth": _truth(), "mart_counterfactual": counterfactual, "mart_investment": _investment()}
     for name, frame in tables.items():
+        storage_name = f"_{name}_data"
         connection.register(f"frame_{name}", frame)
-        connection.execute(f"CREATE TABLE {name} AS SELECT * FROM frame_{name}")
-        connection.execute(f"CREATE OR REPLACE VIEW {name}_view AS SELECT * FROM {name}")
+        connection.execute(f"CREATE TABLE {storage_name} AS SELECT * FROM frame_{name}")
+        connection.execute(f"CREATE OR REPLACE VIEW {name} AS SELECT * FROM {storage_name}")
     connection.close()
     database_path.with_suffix(".synthetic").write_text("Generated with seed 42\n", encoding="utf-8")
     return database_path
