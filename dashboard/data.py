@@ -59,6 +59,14 @@ def _read_mart(con: Any, name: str) -> pd.DataFrame:
 def load_data(theme: str = "light", filter_signature: str = "default") -> dict[str, Any]:
     del theme, filter_signature
     if not DB_PATH.exists():
+        source_dir = ROOT / "data" / "collections_30k_dataset (4)"
+        if source_dir.exists():
+            try:
+                from src.pipeline import build_golden
+                build_golden()
+            except Exception:
+                pass
+    if not DB_PATH.exists():
         return _synthetic()
     try:
         import duckdb
