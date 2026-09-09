@@ -8,14 +8,15 @@ A reproducible answer to the Data Analyst assignment. The project is designed to
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
-python scripts\generate_demo_data.py
 python -m src.pipeline
 streamlit run dashboard\app.py
 ```
 
-The demo data is deliberately small and synthetic. It exercises duplicate payments, multiple agent identifiers, late events, timezone normalization, and a mid-year targeting change. Replace files under `data/raw/` with the supplied extracts and rerun the pipeline.
+The uploaded source package is under `data/collections_30k_dataset (4)/`. It contains 17 CSV extracts and the data dictionary. The real pipeline reads that folder directly; `data/raw/` is intentionally empty.
 
-The executive dashboard is powered exclusively by `data/golden.duckdb`. On a fresh clone, `dashboard/app.py` generates the contract-identical synthetic database automatically. When a real `data/golden.duckdb` is placed there, the dashboard detects it as `GOLDEN` without code changes.
+The executive dashboard is powered exclusively by `data/golden.duckdb`. If that file is absent, it generates a contract-identical synthetic fallback; with the uploaded data present, run `python -m src.pipeline` to create the real database and the dashboard detects it as `GOLDEN`.
+
+The current real-run conclusions are documented in [docs/real_run_findings.md](docs/real_run_findings.md). They are intentionally not forced to match the assignment's suggested narrative: the supplied extract produces a +4.5% legacy change and +31.3% audited change over complete months, with August 8 treated as partial.
 
 ## Repository map
 

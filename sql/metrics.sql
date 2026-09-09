@@ -1,14 +1,14 @@
 -- DuckDB-compatible independent recovery metrics.
--- Run after registering CSV/parquet sources in the orchestration layer.
+-- The real pipeline publishes these tables in the golden.duckdb main schema.
 WITH eligible AS (
-    SELECT month, account_id
-    FROM golden.account_month
-    WHERE eligible = TRUE
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY month, account_id ORDER BY assigned_at DESC) = 1
+    SELECT date_trunc('month', target_date) AS month, account_id
+    FROM account_month
+    WHERE account_id IS NOT NULL
+    GROUP BY 1, 2
 ), settled AS (
-    SELECT date_trunc('month', paid_at) AS month, account_id, SUM(payment_amount) AS settled_amount
-    FROM golden.payments_deduped
-    WHERE payment_amount > 0
+    SELECT date_trunc('month', event_at) AS month, account_id, SUM(amount) AS settled_amount
+    FROM payments_deduped
+    WHERE amount > 0 AND payment_status = 'SUCCESS'
     GROUP BY 1, 2
 )
 SELECT e.month,

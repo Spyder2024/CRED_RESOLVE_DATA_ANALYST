@@ -44,10 +44,13 @@ with st.container(border=True):
 
 trend_column, truth_column = st.columns([1.38, 1], gap="large")
 with trend_column:
-    st.markdown('<div class="section-title">The reported line diverges from audited recovery</div>', unsafe_allow_html=True)
+    latest_gap = float(summary["verified_change_pct"] - summary["reported_change_pct"])
+    st.markdown(f'<div class="section-title">Audited recovery is {latest_gap:.1f} pts above the legacy view</div>', unsafe_allow_html=True)
     trend.render(monthly, float(summary["reported_change_pct"]), float(summary["verified_change_pct"]))
 with truth_column:
-    st.markdown('<div class="section-title">Six of nine headline metrics need correction</div>', unsafe_allow_html=True)
+    misleading = int((frames["mart_metric_truth"]["verdict"] == "MISLEADING").sum())
+    inconclusive = int((frames["mart_metric_truth"]["verdict"] == "INCONCLUSIVE").sum())
+    st.markdown(f'<div class="section-title">{misleading} metric needs correction; {inconclusive} remain inconclusive</div>', unsafe_allow_html=True)
     truth_table.render(frames["mart_metric_truth"])
 
 st.markdown('<div class="section-label">Cause</div>', unsafe_allow_html=True)
@@ -57,4 +60,4 @@ st.markdown('<div class="section-label">Action</div>', unsafe_allow_html=True)
 investment.render(frames["mart_investment"])
 
 generated_at = datetime.now().strftime("%Y-%m-%d %H:%M")
-st.markdown(f'<div class="footer">Caveats: trailing 45 days provisional (late-arriving payments restated) · channel results under 3 attribution schemes in memo · every number traces to a query in sql/04_metrics/ · Generated {generated_at}.</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="footer">Caveats: trailing 45 days provisional (late-arriving payments restated) · channel results under 3 attribution schemes in memo · every number traces to a query in sql/metrics.sql · Generated {generated_at}.</div>', unsafe_allow_html=True)

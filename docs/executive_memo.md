@@ -1,17 +1,17 @@
-# Executive memo (complete after loading real extracts)
+# Executive memo
 
 ## What happened?
 
-**Status: pending real data.** The dashboard currently runs on synthetic data only. Report: recovery rate, settled amount, recovery/account, recovery/agent-hour, and PTP kept rate with fixed month-start denominators.
+The supplied extract covers 2026-01-01 through 2026-08-08. August is partial and is excluded from the headline comparison. The legacy contacted-account view improved **4.5%** from the first to last complete month; the independently audited eligible-account view improved **31.3%**. The assignment's stated 11% claim is not reproduced by this extract.
 
 ## Why?
 
-Separate facts from evidence. Report mix-adjusted results by DPD, client, geography, language, agent tenure, campaign, channel, vendor, calling hour, attempt frequency, and borrower segment. Label every statement as Fact, Strong Evidence, Correlation, or Hypothesis.
+**Fact:** the audited recovery trend is higher than the legacy view in this extract. **Strong evidence:** the gap is sensitive to denominator and event-cleaning choices. **Correlation:** targeting strategy and channel differences are observational. **Hypothesis:** a better-targeting intervention may create incremental recovery, but the dataset has no untreated holdout.
 
 ## Is 11% real?
 
-Compare the reported metric with the independent metric contract in `README.md`. Quantify absolute percentage-point and relative change, and show the impact of deduplication, denominator repair, timezone normalization, and payment attribution.
+The reported 11% improvement is not supported. The observed complete-month changes are 4.5% legacy and 31.3% audited, with an approximate audited interval of 20.4% to 43.1%. Duplicate payment references, duplicate borrower identities, duplicate call IDs, three timezones, and a partial final month are material data-quality conditions.
 
 ## Recommendation
 
-Do not commit the ₹10 Cr until the counterfactual and a holdout test are complete. Select one investment only after estimating incremental settled amount, total cost, ROI, break-even month, uncertainty interval, and downside case. If no reliable causal estimate exists, recommend a randomized pilot and state the minimum detectable effect and duration.
+Recommend **better borrower targeting as a low-confidence ₹10 Cr pilot**, not a full irreversible rollout. The model assumes a 5% incremental lift and therefore produces a low-confidence expected recovery of approximately ₹0.01 Cr in the current complete-month baseline, with modeled ROI 0.2x–0.8x and an 18-month break-even. This is not a causal estimate. First randomize a 10% account-level holdout, run through at least two complete collection months, and only scale if the confidence interval excludes zero and complaints do not rise.

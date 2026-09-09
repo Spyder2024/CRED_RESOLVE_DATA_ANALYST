@@ -1,7 +1,0 @@
-{
-  "targeting_raw_rows": 3000,
-  "payments_raw_rows": 351,
-  "payments_deduped_rows": 345,
-  "duplicate_payment_rows_removed": 6,
-  "metric_version": "v1_fixed_month_start_30d_payment_date"
-}

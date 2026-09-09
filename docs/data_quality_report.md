@@ -2,14 +2,16 @@
 
 ## Current run
 
-The current run uses synthetic demo data because the workspace contains only the assignment PDF. This is a pipeline validation result, not a business finding.
+The current run uses the uploaded 17-table package under `data/collections_30k_dataset (4)`. The generated golden database is `data/golden.duckdb`; the synthetic fallback is not used for this run.
 
 | Check | Detection | Treatment | Demo impact |
 |---|---|---|---:|
-| Duplicate payments | Account + paid timestamp + amount hash | Keep one row | 6 rows removed |
-| Duplicate account-month targeting | Account/month uniqueness | Keep latest assigned event | Applied before aggregation |
+| Duplicate payments | Payment reference, with account/event/amount fallback | Keep one positive SUCCESS row | Reconciled in `quality_checks` |
+| Duplicate borrower identities | `borrower_id` and latest `updated_at` | Keep latest row | 30,600 source rows reduced to 11,015 IDs |
+| Duplicate account-month targeting | Account/month uniqueness | Keep one account-month | Applied before aggregation |
 | Negative or invalid payments | Numeric coercion and lower bound | Convert invalid to zero; flag in production | None observed |
 | Missing payment months | Left join to eligible population | Fill settled amount and recovered accounts with zero | Preserves denominator |
+| Partial August 2026 | Maximum targeting date is August 8 | Exclude from headline comparison, retain in trend | Prevents partial-month bias |
 | Agent identity aliases | Canonical mapping table required | Map AG-02 to AG02 in production staging | Demo sessions include alias |
 | Time zones | Source-local timestamp plus source timezone required | Convert to UTC, derive business local date | Not inferable from demo |
 
